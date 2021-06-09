@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -88,6 +89,11 @@ public class DataSiswa extends javax.swing.JFrame {
         jScrollPane1.setViewportView(jTable1);
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                formMouseClicked(evt);
+            }
+        });
 
         tbl_siswa.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -100,6 +106,11 @@ public class DataSiswa extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tbl_siswa.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tbl_siswaMouseClicked(evt);
+            }
+        });
         jScrollPane2.setViewportView(tbl_siswa);
 
         cmdRefresh.setText("Refresh");
@@ -178,6 +189,8 @@ public class DataSiswa extends javax.swing.JFrame {
 
     private void cmdTambahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdTambahActionPerformed
         // TODO add your handling code here:
+        ManageData tambahData = new ManageData(this, true);
+        tambahData.setVisible(true);
     }//GEN-LAST:event_cmdTambahActionPerformed
 
     private void cmdEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdEditActionPerformed
@@ -186,11 +199,37 @@ public class DataSiswa extends javax.swing.JFrame {
 
     private void cmdHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdHapusActionPerformed
         // TODO add your handling code here:
+        String idWhoWantToBeDelete = tbl_siswa.getValueAt(baris, 0).toString();
+        try{
+            Statement stmt = koneksi.createStatement();
+            String query = "DELETE FROM t_siswa WHERE nis = '"+idWhoWantToBeDelete+"'";
+            
+            int berhasil = stmt.executeUpdate(query);
+            if(berhasil == 1){
+                JOptionPane.showMessageDialog(null, "Data Berhasil Dihapus!");
+                dtm.getDataVector().removeAllElements();
+                showData();
+            } else {
+                JOptionPane.showMessageDialog(null, "Data Gagal Dihapus!");
+            }
+        } catch (SQLException ex){
+            ex.printStackTrace();
+        }
     }//GEN-LAST:event_cmdHapusActionPerformed
 
     private void cmdRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmdRefreshActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmdRefreshActionPerformed
+
+    private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
+        // TODOadd your handling code here:
+    }//GEN-LAST:event_formMouseClicked
+
+    int baris;
+    private void tbl_siswaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tbl_siswaMouseClicked
+        // TODO add your handling code here:
+        baris = tbl_siswa.getSelectedRow();
+    }//GEN-LAST:event_tbl_siswaMouseClicked
 
     /**
      * @param args the command line arguments
